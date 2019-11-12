@@ -1,6 +1,4 @@
-import json
 import os
-from datetime import datetime
 from typing import Dict
 
 import attr
