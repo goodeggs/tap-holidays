@@ -1,0 +1,53 @@
+{
+  "type": ["null", "object"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": ["null", "string"]
+    },
+    "date": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "observed": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "public": {
+      "type": ["null", "boolean"]
+    },
+    "country": {
+      "type": ["null", "string"]
+    },
+    "uuid": {
+      "type": ["null", "string"]
+    },
+    "weekday": {
+      "type": ["null", "object"],
+      "properties": {
+        "date": {
+          "type": ["null", "object"],
+          "properties": {
+            "name": {
+              "type": ["null", "string"]
+            },
+            "numeric": {
+              "type": ["null", "integer"]
+            }
+          }
+        },
+        "observed": {
+          "type": ["null", "object"],
+          "properties": {
+            "name": {
+              "type": ["null", "string"]
+            },
+            "numeric": {
+              "type": ["null", "integer"]
+            }
+          }
+        }
+      }
+    }
+  }
+}
