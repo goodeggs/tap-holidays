@@ -42,7 +42,7 @@ setuptools.setup(
         'singer-python==5.8.1',
         'rollbar==0.14.7'
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.6',
     entry_points={
         'console_scripts': ['tap-holidays = tap_holidays:main']
     }

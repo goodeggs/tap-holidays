@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Set
+from typing import Dict
 
 import attr
 import requests
@@ -18,7 +18,6 @@ class HolidayAPIStream(object):
     state: Dict = attr.ib()
     api_version: str = attr.ib(default="v1", validator=attr.validators.instance_of(str))
     params: Dict = attr.ib(default=None)
-    bool_params: Set = attr.ib(factory=set)
     base_url: str = attr.ib(default="https://holidayapi.com/")
 
     def __attrs_post_init__(self):
@@ -101,7 +100,7 @@ class HolidayAPIStream(object):
 @attr.s
 class HolidayStream(HolidayAPIStream):
     tap_stream_id = 'holidays'
-    key_properties = ["uuid"]
+    key_properties = ["uuid", "date"]
     bookmark_properties = []
     replication_method = 'full_table'
     required_params = {
