@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Set
+from typing import Dict
 
 import attr
 import requests
