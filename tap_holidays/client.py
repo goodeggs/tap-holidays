@@ -101,7 +101,7 @@ class HolidayAPIStream(object):
 @attr.s
 class HolidayStream(HolidayAPIStream):
     tap_stream_id = 'holidays'
-    key_properties = ["uuid"]
+    key_properties = ["uuid", "date"]
     bookmark_properties = []
     replication_method = 'full_table'
     required_params = {
