@@ -18,7 +18,6 @@ class HolidayAPIStream(object):
     state: Dict = attr.ib()
     api_version: str = attr.ib(default="v1", validator=attr.validators.instance_of(str))
     params: Dict = attr.ib(default=None)
-    bool_params: Set = attr.ib(factory=set)
     base_url: str = attr.ib(default="https://holidayapi.com/")
 
     def __attrs_post_init__(self):
