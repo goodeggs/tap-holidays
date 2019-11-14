@@ -73,9 +73,15 @@ def sync(args):
 def main():
     args = singer.parse_args(required_config_keys=REQUIRED_CONFIG_KEYS)
     if args.discover:
-        discover(args, select_all=True)
+        try:
+            discover(args, select_all=True)
+        except:
+            LOGGER.exception("Caught an exception during Discovery..")
     else:
-        sync(args)
+        try:
+            sync(args)
+        except:
+            LOGGER.exception("Caught an exception during Sync..")
 
 
 if __name__ == "__main__":
