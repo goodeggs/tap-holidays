@@ -42,7 +42,8 @@ setuptools.setup(
     install_requires=[
         'requests==2.22.0',
         'attrs==19.3.0',
-        'singer-python==5.8.1',
+        'backoff==1.8.0',
+        'singer-python==5.9.0',
         'rollbar==0.14.7'
     ],
     python_requires='>=3.6',

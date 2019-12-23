@@ -1,7 +1,8 @@
 import os
-from typing import Dict
+from typing import ClassVar, Dict, Iterator, List, Optional, Set
 
 import attr
+import backoff
 import requests
 import singer
 
@@ -10,8 +11,16 @@ from .version import __version__
 LOGGER = singer.get_logger()
 
 
+def is_fatal_code(e: requests.exceptions.RequestException) -> bool:
+    '''Helper function to determine if a Requests reponse status code
+    is a "fatal" status code. If it is, the backoff decorator will giveup
+    instead of attemtping to backoff.'''
+    return 400 <= e.response.status_code < 500 and e.response.status_code != 429
+
+
 @attr.s
 class HolidayAPIStream(object):
+    tap_stream_id: ClassVar[Optional[str]] = None
 
     api_key: str = attr.ib()
     config: Dict = attr.ib(repr=False)
@@ -61,6 +70,16 @@ class HolidayAPIStream(object):
         headers["Date"] = singer.utils.strftime(singer.utils.now(), '%a, %d %b %Y %H:%M:%S %Z')
         return headers
 
+    @backoff.on_exception(backoff.fibo,
+                          requests.exceptions.HTTPError,
+                          max_time=120,
+                          giveup=is_fatal_code,
+                          logger=LOGGER)
+    @backoff.on_exception(backoff.fibo,
+                          (requests.exceptions.ConnectionError,
+                           requests.exceptions.Timeout),
+                          max_time=120,
+                          logger=LOGGER)
     def _get(self, endpoint: str, params: Dict = None) -> Dict:
         '''Constructs a standard way of making
         a GET request to the Holiday API.
@@ -72,7 +91,7 @@ class HolidayAPIStream(object):
         response.raise_for_status()
         return response.json()
 
-    def _yield_records(self, entity: str, params: Dict = None) -> Dict:
+    def _yield_records(self, entity: str, params: Dict = None) -> Iterator[Dict]:
         '''Yeild individual records for a given entity.'''
         records = self._get(endpoint=f"/{entity}", params=params).get(entity)
         for record in records:
@@ -99,15 +118,15 @@ class HolidayAPIStream(object):
 
 @attr.s
 class HolidayStream(HolidayAPIStream):
-    tap_stream_id = 'holidays'
-    key_properties = ["uuid", "date"]
-    bookmark_properties = []
-    replication_method = 'full_table'
-    required_params = {
+    tap_stream_id: ClassVar[str] = 'holidays'
+    key_properties: ClassVar[List[str]] = ["uuid", "date"]
+    bookmark_properties: ClassVar[List[str]] = []
+    replication_method: ClassVar[str] = 'full_table'
+    required_params: ClassVar[Set[str]] = {
         "country",
         "year"
     }
-    valid_params = {
+    valid_params: ClassVar[Set[str]] = {
         "country",
         "year",
         "month",
