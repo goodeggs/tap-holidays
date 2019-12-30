@@ -1,0 +1,10 @@
+{
+  "api_key": "foobar123",
+  "api_version": "v1",
+  "streams": {
+    "holidays": {
+      "country": "US",
+      "year": 2019
+    }
+  }
+}
